@@ -15,8 +15,9 @@ pipeline {
         stage('Terraform Version') {
             steps {
                 script {
-                    // Check if Terraform is installed
+                    // Ensure Terraform is installed and print the version
                     sh 'terraform version'
+                    echo 'Terraform version step executed.'
                 }
             }
         }
@@ -25,8 +26,9 @@ pipeline {
             steps {
                 script {
                     // Debug: Check environment variable GOOGLE_CREDENTIALS
-                    sh 'echo $GOOGLE_CREDENTIALS'
+                    sh 'echo "GOOGLE_CREDENTIALS: $GOOGLE_CREDENTIALS"'
                     sh 'ls -l $GOOGLE_CREDENTIALS'  // Verify if the credential file exists
+                    echo 'Debugging step executed.'
                 }
             }
         }
@@ -35,6 +37,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_CREDENTIALS')]) {
                     script {
+                        echo 'Terraform Init step started.'
                         // Debug: Confirm if the file is available and Terraform init
                         sh '''
                             echo "Using GCP Credentials from $GOOGLE_CREDENTIALS"
@@ -50,6 +53,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_CREDENTIALS')]) {
                     script {
+                        echo 'Terraform Apply step started.'
                         // Debug: Confirm if the file is available and Apply Terraform
                         sh '''
                             echo "Using GCP Credentials from $GOOGLE_CREDENTIALS"
