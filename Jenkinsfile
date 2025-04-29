@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout Git') {
             steps {
-                git credentialsId: 'github-creds', url: 'https://github.com/your-username/your-repo.git'
+                git credentialsId: 'github-creds', url: 'https://github.com/Ram4Linux/gke-terraform.git'
             }
         }
 
@@ -21,13 +21,23 @@ pipeline {
             }
         }
 
+        stage('Debugging') {
+            steps {
+                script {
+                    // Debug: Check environment variable GOOGLE_CREDENTIALS
+                    sh 'echo $GOOGLE_CREDENTIALS'
+                    sh 'ls -l $GOOGLE_CREDENTIALS'  // Verify if the credential file exists
+                }
+            }
+        }
+
         stage('Terraform Init') {
             steps {
                 withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_CREDENTIALS')]) {
                     script {
-                        // Export GOOGLE_APPLICATION_CREDENTIALS environment variable
-                        // pointing to the GCP credentials file
+                        // Debug: Confirm if the file is available and Terraform init
                         sh '''
+                            echo "Using GCP Credentials from $GOOGLE_CREDENTIALS"
                             export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_CREDENTIALS
                             terraform init
                         '''
@@ -40,9 +50,9 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_CREDENTIALS')]) {
                     script {
-                        // Export GOOGLE_APPLICATION_CREDENTIALS environment variable
-                        // and apply the Terraform configuration
+                        // Debug: Confirm if the file is available and Apply Terraform
                         sh '''
+                            echo "Using GCP Credentials from $GOOGLE_CREDENTIALS"
                             export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_CREDENTIALS
                             terraform apply -auto-approve
                         '''
