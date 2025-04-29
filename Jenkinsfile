@@ -25,7 +25,8 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_CREDENTIALS')]) {
                     script {
-                        // Export GCP credentials and run terraform init
+                        // Export GOOGLE_APPLICATION_CREDENTIALS environment variable
+                        // pointing to the GCP credentials file
                         sh '''
                             export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_CREDENTIALS
                             terraform init
@@ -39,7 +40,8 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_CREDENTIALS')]) {
                     script {
-                        // Apply the Terraform configuration
+                        // Export GOOGLE_APPLICATION_CREDENTIALS environment variable
+                        // and apply the Terraform configuration
                         sh '''
                             export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_CREDENTIALS
                             terraform apply -auto-approve
