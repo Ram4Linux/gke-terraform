@@ -1,5 +1,5 @@
 provider "google" {
-  credentials = file("gcp-key.json")  # This file will be set up in Jenkins
+  credentials = file(var.credentials_file)  # This is where the GCP key file will be injected
   project     = var.project_id
   region      = var.region
 }
@@ -13,4 +13,12 @@ resource "google_container_cluster" "primary" {
   node_config {
     machine_type = "e2-medium"
   }
+}
+
+output "cluster_name" {
+  value = google_container_cluster.primary.name
+}
+
+output "endpoint" {
+  value = google_container_cluster.primary.endpoint
 }
