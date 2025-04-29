@@ -6,11 +6,26 @@ pipeline {
     }
 
     stages {
+        stage('Checkout Git') {
+            steps {
+                git credentialsId: 'github-creds', url: 'https://github.com/your-username/your-repo.git'
+            }
+        }
+
+        stage('Terraform Version') {
+            steps {
+                script {
+                    // Check if Terraform is installed
+                    sh 'terraform version'
+                }
+            }
+        }
+
         stage('Terraform Init') {
             steps {
                 withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_CREDENTIALS')]) {
                     script {
-                        // Export GCP credentials to the environment for Terraform
+                        // Export GCP credentials and run terraform init
                         sh '''
                             export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_CREDENTIALS
                             terraform init
