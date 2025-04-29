@@ -1,8 +1,15 @@
 variable "project_id" {
-  type = string
+  description = "The GCP project ID"
+  type        = string
 }
 
 variable "region" {
-  type    = string
-  default = "us-central1"
+  description = "The region to deploy the GKE cluster"
+  type        = string
+  default     = "us-central1"
+}
+
+variable "credentials_file" {
+  description = "Path to the GCP credentials JSON file"
+  type        = string
 }
